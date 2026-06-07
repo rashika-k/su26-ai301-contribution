@@ -1,7 +1,7 @@
 # su26-ai301-contribution
 Github Contribution Log
 
-# Contribution [#]: [Issue Title]
+# Contribution [1]: [Issue Title]
 
 **Contribution Number:** 1 
 **Student:** Rashika Karmacharya  
