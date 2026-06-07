@@ -1,26 +1,25 @@
 # su26-ai301-contribution
 Github Contribution Log
 
-# Contribution [1]: [Issue Title]
+# Contribution 1: Setting config variable with incompatible type produces unclear error message
 
 **Contribution Number:** 1 
+
 **Student:** Rashika Karmacharya  
-**Issue:** [GitHub issue link]  
-**Status:** Phase 1 In progress
+**Issue:**  https://github.com/pwndbg/pwndbg/issues/1718  
+**Status:** Phase 1 Complete
 
 ---
 
 ## Why I Chose This Issue
-
-[1-2 paragraphs explaining why this issue interests you, how it matches your skills/learning goals, what you hope to learn]
-
+I chose this issue because it sits at the intersection of Python internals and developer tooling, which maps directly to work I've done before. I also wanted a first OSS contribution that was bounded enough to complete well within two weeks but still required real investigation — not just a typo or doc update. This issue requires understanding how pwndbg's config system works, tracing where user input flows before reaching GDB, and handling a subtle Python edge case where bool is a subclass of int. That's a real bug with a real fix, and the kind of thing that's easy to verify once you've solved it.
 ---
 
 ## Understanding the Issue
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+When a user sets a pwndbg config variable to an incompatible type — for example, passing False to context-backtrace-lines which expects an integer — pwndbg passes the value through to GDB, which responds with a confusing unrelated error message (No symbol table is loaded. Use the "file" command.) instead of explaining that the type is wrong.
 
 ### Expected Behavior
 
