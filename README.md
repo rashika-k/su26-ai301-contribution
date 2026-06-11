@@ -6,13 +6,13 @@ Github Contribution Log
 **Contribution Number:** 1 
 
 **Student:** Rashika Karmacharya  
-**Issue:**  https://github.com/pwndbg/pwndbg/issues/1718  
+**Issue:** https://github.com/mcgill-courses/mcgill.courses/issues/771  
 **Status:** Phase 1 Complete
 
 ---
 
 ## Why I Chose This Issue
-I chose this issue because it sits at the intersection of Python internals and developer tooling, which maps directly to work I've done before. I also wanted a first OSS contribution that was bounded enough to complete well within two weeks but still required real investigation — not just a typo or doc update. This issue requires understanding how pwndbg's config system works, tracing where user input flows before reaching GDB, and handling a subtle Python edge case where bool is a subclass of int. That's a real bug with a real fix, and the kind of thing that's easy to verify once you've solved it.
+I chose this issue because it sits at the intersection of Python and databases, which maps directly to work I've done before. I also wanted a first OSS contribution that was bounded enough to complete well within two weeks but still required real investigation not just a typo or doc update. This issue requires understanding how a completely new language Rust works and tracing where the database needs change. That's a real bug with a real fix, and the kind of thing that's easy to verify once you've solved it.
 ---
 
 ## Understanding the Issue
