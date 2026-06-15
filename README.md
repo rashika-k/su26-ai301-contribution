@@ -12,7 +12,9 @@ Github Contribution Log
 ---
 
 ## Why I Chose This Issue
+
 I chose this issue because it sits at the intersection of Python and databases, which maps directly to work I've done before. I also wanted a first OSS contribution that was bounded enough to complete well within two weeks but still required real investigation not just a typo or doc update. This issue requires understanding how a completely new language Rust works and tracing where the database needs change. That's a real bug with a real fix, and the kind of thing that's easy to verify once you've solved it.
+
 ---
 
 ## Understanding the Issue
