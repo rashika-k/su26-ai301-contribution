@@ -18,40 +18,50 @@ I chose this issue because it sits at the intersection of Python and databases, 
 ## Understanding the Issue
 
 ### Problem Description
-
-When a user sets a pwndbg config variable to an incompatible type — for example, passing False to context-backtrace-lines which expects an integer — pwndbg passes the value through to GDB, which responds with a confusing unrelated error message (No symbol table is loaded. Use the "file" command.) instead of explaining that the type is wrong.
-
+Issue #771 requests that the Review type be extended to hold an optional term field (e.g. "Fall 2025", "Winter 2026"), and that the add/edit review form allow users to set it. Currently there is no structured way to record which academic term a reviewer took the course. If they want to share that context, they have to write it manually inside the review body text.
+  
 ### Expected Behavior
 
-[What should happen?]
+When submitting or editing a review, a user should be able to select the term they took the course from a dropdown (e.g. Fall 2025, Winter 2026). That term should be saved with the review and displayed on the review card alongside the instructor name.
 
 ### Current Behavior
-
-[What actually happens?]
+The Review data type has no term field. The add/edit review form has no term input. Reviews are stored and displayed without any term metadata. The only way to communicate term context is to write it inside the free-text review body.
 
 ### Affected Components
 
-[Which parts of the codebase are involved?]
-
----
+  - crates/model/src/review.rs — core Review struct (data model)
+  - src/reviews.rs — AddOrUpdateReviewBody request struct and add_review / update_review handlers
+  - client/src/lib/types.ts — auto-generated TypeScript types (regenerated via just typeshare)
+  - client/src/components/review-form.tsx — shared form used by both add and edit flows
+  - client/src/components/add-review-form.tsx — sets initial form values for new reviews
+  - client/src/components/edit-review-form.tsx — sets initial form values when editing an existing review
+  - client/src/components/course-review.tsx — renders the review card that users see
 
 ## Reproduction Process
 
 ### Environment Setup
 
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+  The project is a Rust + React monorepo. The backend requires a stable Rust toolchain and a running MongoDB instance (via Docker using docker-compose.yml). The frontend uses Node and pnpm. The project uses just as a task runner where running just dev starts both services, and just typeshare regenerates TypeScript types from Rust structs after any model changes.
 
+  Authentication is handled via McGill's Azure AD tenant, which is hardcoded in src/auth.rs (MCGILL_TENANT_ID). Since I don't have a McGill Microsoft account, login  was not possible without modifying that constant locally. Most of the work for this issue — model changes, backend changes, and form UI — is verifiable without being logged in, since course reviews are publicly visible and the form renders regardless of auth state.
+  
 ### Steps to Reproduce
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+  1. Run the app locally with just dev
+  2. Navigate to any course page (e.g. /course/COMP-202)
+  3. Click "Add Review" to open the review modal
+  4. Observe that the form contains fields for instructor(s), rating, difficulty, and review content — but no field for the term the course was taken
+  5. Submit a review and view it on the course page — no term is shown on the review card; the only way to
+  communicate term context is writing it inside the review body
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [Link to commit in your fork]
-- **Screenshots/logs:** [If applicable]
-- **My findings:** [What you discovered during reproduction]
+- **Commit showing reproduction:** [[Link to commit in your fork]](https://github.com/mcgill-courses/mcgill.courses/commit/c04435966450c7ab80beacc5001b599929ba8719)
+  
+- **Screenshots/logs:** <img width="1102" height="1162" alt="Screenshot 2026-06-15 at 1 37 06 AM" src="https://github.com/user-attachments/assets/d51275f5-739c-4543-a721-b1d810285f0f" />
+<img width="1102" height="1162" alt="Screenshot 2026-06-15 at 1 37 13 AM" src="https://github.com/user-attachments/assets/99ea6452-c6bc-4b96-a7f9-aa0f752b7252" />
+
+- **My findings:** The Review struct in crates/model/src/review.rs confirms no term field exists. The AddOrUpdateReviewBody in src/reviews.rs equally has no term. The ReviewForm component in review-form.tsx has inputs for instructors, rating, difficulty, and content only. The CourseReview display component in course-review.tsx renders the instructor line but has no place to show a term.
 
 ---
 
