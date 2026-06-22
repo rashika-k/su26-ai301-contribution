@@ -7,7 +7,7 @@ Github Contribution Log
 
 **Student:** Rashika Karmacharya  
 **Issue:** https://github.com/mcgill-courses/mcgill.courses/issues/771  
-**Status:** Phase 1 Complete
+**Status:** Phase 3 In Progress
 
 ---
 
@@ -71,30 +71,34 @@ The Review data type has no term field. The add/edit review form has no term inp
 
 ### Analysis
 
-[Your analysis of the root cause - what's causing the issue?]
+The Review struct in crates/model/src/review.rs has no term field, so MongoDB never stores one. The request body handler, the frontend form, and the review card display component all follow from the model and none of them have term support either. The fix needs to thread the field through every layer of the stack.
 
 ### Proposed Solution
 
-[High-level description of your fix approach]
+Add term: Option<String> to the Rust Review struct, propagate it through the request body and handlers, regenerate the TypeScript types via typeshare, then add a term selector to the review form and display it on the review card.
 
 ### Implementation Plan
 
 Using UMPIRE framework (adapted):
 
-**Understand:** [Restate the problem]
+**Understand:** Reviews have no way to record which academic term they were written for. Users have to write it in the review body text if they want to communicate it at all.
 
-**Match:** [What similar patterns/solutions exist in the codebase?]
+**Match:** The instructors field is a good reference pattern — it's an optional multi-value field on Review that flows through the model, request body, form, and display card. The term field follows the same path but is a single optional string.
 
 **Plan:** [Step-by-step implementation plan]
-1. [Modify file X to do Y]
-2. [Add function Z]
-3. [Update tests]
+1. Add term: Option<String> to Review struct in crates/model/src/review.rs
+2. Update Default and Into<Bson> impls
+3. Add term to AddOrUpdateReviewBody in src/reviews.rs
+4. Run typeshare to regenerate client/src/lib/types.ts
+5. Add term selector dropdown to client/src/components/review-form.tsx
+6. Update add-review-form.tsx and edit-review-form.tsx initial values
+7. Display term on the review card in course-review.tsx
+   
+**Implement:** [Branch: feat/771-Add-terms-to-course-reviews](https://github.com/rashika-k/mcgill.courses/tree/feat/771-Add-terms-to-course-reviews)
 
-**Implement:** [Link to your branch/commits as you work]
+**Review:** No unnecessary changes, tests pass, typeshare regenerated, style matches existing code
 
-**Review:** [Self-review checklist - does it follow the project's contribution guidelines?]
-
-**Evaluate:** [How will you verify it works?]
+**Evaluate:** Run the app locally, open a course page, submit a review with a term selected, confirm it appears on the review card
 
 ---
 
@@ -102,36 +106,49 @@ Using UMPIRE framework (adapted):
 
 ### Unit Tests
 
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+#### serialize_term_when_present
+Test case 1: verifies that Some("Fall 2025") serializes to the correct JSON string
+
+#### serialize_term_when_absent
+Test case 2: verifies that None serializes to JSON null
+
+-  All 24 existing tests still pass with no regressions
 
 ### Integration Tests
 
-- [ ] Integration scenario 1
+No integration tests yet
+
+- [Done when I Work on the frontend] Integration scenario 1
 - [ ] Integration scenario 2
 
 ### Manual Testing
-
-[What you tested manually and results]
+cargo build passes cleanly, cargo test -p model 24/24
 
 ---
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week 1 Progress
 
-[What you built this week, challenges faced, decisions made]
+I worked on the backend this time.
+- Added term tp the Review Struct on the review rust file and updated the Default and Into<Bson> as well.
+- Ran typeshare to generate a ts file
 
-### Week [Y] Progress
-
-[Continue documenting as you work]
-
+- Files modified:
+  -- crates/model/src/review.rs
+  -- client/src/lib/types.ts (auto-generated)
+  
 ### Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+- **Files modified:**
+  -- crates/model/src/review.rs
+  -- client/src/lib/types.ts (auto-generated)
+  
+- **Key commits:**
+-   [8457125fab45ee051d9300e8f257c16cc95efade](https://github.com/rashika-k/mcgill.courses/commit/8457125fab45ee051d9300e8f257c16cc95efade)
+-   [6bf2de529705a4da80bc7fba52073a78af28597e](https://github.com/rashika-k/mcgill.courses/commit/6bf2de529705a4da80bc7fba52073a78af28597e)
+  
+- **Approach decisions:** Most logical step
 
 ---
 
