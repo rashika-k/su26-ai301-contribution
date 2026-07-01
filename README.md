@@ -7,7 +7,7 @@ Github Contribution Log
 
 **Student:** Rashika Karmacharya  
 **Issue:** https://github.com/mcgill-courses/mcgill.courses/issues/771  
-**Status:** Phase 3 In Progress
+**Status:** Phase 3 In Progress still
 
 ---
 
