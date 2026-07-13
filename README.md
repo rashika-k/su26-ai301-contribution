@@ -154,15 +154,15 @@ I worked on the backend this time.
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** [PR URL](https://github.com/mcgill-courses/mcgill.courses/pull/1170)
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** Added an optional `term` field (e.g. "Fall 2025") to reviews so users can record which term they took a course, instead of writing it into the free-text review body. This required extending the `Review` model and `AddOrUpdateReviewBody` on the backend, regenerating the typeshare-generated TypeScript types, and adding a term dropdown to the add/edit review form on the frontend, populated from the course's offered terms merged with a recent-terms range and defaulting to the current term.
+
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- Not yet received — PR just opened.
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** Awaiting review
 
 ---
 
