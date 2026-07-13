@@ -1,7 +1,7 @@
 # su26-ai301-contribution
 Github Contribution Log
 
-# Contribution 1: Setting config variable with incompatible type produces unclear error message
+# Contribution 1: Adding terms to the course reviews
 
 **Contribution Number:** 1 
 
