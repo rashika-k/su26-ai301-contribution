@@ -7,7 +7,7 @@ Github Contribution Log
 
 **Student:** Rashika Karmacharya  
 **Issue:** https://github.com/mcgill-courses/mcgill.courses/issues/771  
-**Status:** Phase 3 In Progress still
+**Status:** Phase 4 In Progress 
 
 ---
 
@@ -118,8 +118,7 @@ Test case 2: verifies that None serializes to JSON null
 
 No integration tests yet
 
-- [Done when I Work on the frontend] Integration scenario 1
-- [ ] Integration scenario 2
+- [X] Works with the card.
 
 ### Manual Testing
 cargo build passes cleanly, cargo test -p model 24/24
@@ -170,15 +169,16 @@ I worked on the backend this time.
 
 ### Technical Skills Gained
 
-[What you learned technically]
+-Rust Usage
+-Test Credentials
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+The hardest part was integrating tests when I didn't have access to the school email to which I found out later that there was a test email that I could have used
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+I would ask for more documentation even if they don't have it and I would make better and more minute commits
 
 ---
 
