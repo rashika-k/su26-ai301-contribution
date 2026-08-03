@@ -7,7 +7,7 @@ Github Contribution Log
 
 **Student:** Rashika Karmacharya  
 **Issue:** https://github.com/mcgill-courses/mcgill.courses/issues/771  
-**Status:** Phase 4 In Progress 
+**Status:** Phase 4 In Progress - addressing the issues in the PR
 
 ---
 
@@ -96,6 +96,30 @@ Using UMPIRE framework (adapted):
    
 **Implement:** [Branch: feat/771-Add-terms-to-course-reviews](https://github.com/rashika-k/mcgill.courses/tree/feat/771-Add-terms-to-course-reviews)
 
+My original PR (#1170) failed CI because my branch was 19 commits behind upstream/master
+  and had accumulated merge conflicts. I:
+
+  - Fetched upstream and rebased `feat/771-Add-terms-to-course-reviews` onto
+  `upstream/master` (6 commits replayed over 19 new upstream commits).
+  - Resolved conflicts in `client/src/lib/types.ts`: an earlier local `typeshare` run had
+  reformatted the entire file (tabs vs. spaces, different quote style) as a side effect of
+  adding the `term` field, which conflicted with every line upstream had touched since.
+  Reset the file to upstream's canonical formatting and re-applied only the intentional
+  `term` field additions, so the diff stays minimal.
+  - Found and fixed a bug in my local `.env`: a duplicated block of the same three OAuth
+  keys with a typo (`MS _CLIENT_ID` — stray space) that was breaking both `docker compose`
+  and (most likely) the Rust `dotenv` loader, causing all 39 server tests to panic locally
+  with `Invalid redirect URL: RelativeUrlWithoutBase`.
+  - Started the local MongoDB replica set via `docker compose up -d mongodb mongodb-init`
+  (wasn't running).
+  - Re-ran the full suite: 45/45 server tests and 212/212 client tests passing locally.
+  - Pushed the rebased history to a new branch
+  (`feat/771-Add-terms-to-course-reviews-rebased`) rather than force-pushing over the old
+  remote branch, and opened a fresh PR from it.
+
+  - Files touched in this session: `client/src/lib/types.ts` (conflict resolution only, no
+  new logic), local `.env` (not tracked by git).
+
 **Review:** No unnecessary changes, tests pass, typeshare regenerated, style matches existing code
 
 **Evaluate:** Run the app locally, open a course page, submit a review with a term selected, confirm it appears on the review card
@@ -116,13 +140,14 @@ Test case 2: verifies that None serializes to JSON null
 
 ### Integration Tests
 
-No integration tests yet
+<img width="777" height="750" alt="Screenshot 2026-08-02 at 10 32 03 PM" src="https://github.com/user-attachments/assets/93b18b39-da13-4acf-bf6a-845971357e6d" />
 
 - [X] Works with the card.
 
 ### Manual Testing
 cargo build passes cleanly, cargo test -p model 24/24
-
+ After rebase: `cargo test --all --all-targets` → 45/45 server tests pass; `pnpm
+  --filter client run test` → 212/212 client tests pass.
 ---
 
 ## Implementation Notes
@@ -153,15 +178,15 @@ I worked on the backend this time.
 
 ## Pull Request
 
-**PR Link:** [PR URL](https://github.com/mcgill-courses/mcgill.courses/pull/1170)
+**PR Link:** [https://github.com/mcgill-courses/mcgill.courses/pull/1170](https://github.com/mcgill-courses/mcgill.courses/pull/1199)
 
 **PR Description:** Added an optional `term` field (e.g. "Fall 2025") to reviews so users can record which term they took a course, instead of writing it into the free-text review body. This required extending the `Review` model and `AddOrUpdateReviewBody` on the backend, regenerating the typeshare-generated TypeScript types, and adding a term dropdown to the add/edit review form on the frontend, populated from the course's offered terms merged with a recent-terms range and defaulting to the current term.
 
 
 **Maintainer Feedback:**
-- Not yet received — PR just opened.
-
-**Status:** Awaiting review
+Failed PR -redone
+**Status:** Re-opened after rebasing onto upstream/master to resolve CI failures from PR
+  #1170 (branch was 19 commits stale).
 
 ---
 
@@ -175,7 +200,11 @@ I worked on the backend this time.
 ### Challenges Overcome
 
 The hardest part was integrating tests when I didn't have access to the school email to which I found out later that there was a test email that I could have used
-
+ Debugging the CI test failures required tracing a panic back through dotenv/env-var
+  loading to a malformed .env file, and untangling a merge conflict that turned out to be
+  caused by an accidental full-file reformat from a stray local typeshare version — neither
+  was visible from the error message alone.
+  
 ### What I'd Do Differently Next Time
 
 I would ask for more documentation even if they don't have it and I would make better and more minute commits
