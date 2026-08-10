@@ -188,6 +188,17 @@ Failed PR -redone
 **Status:** Re-opened after rebasing onto upstream/master to resolve CI failures from PR
   #1170 (branch was 19 commits stale).
 
+  Today's changes (addressing that feedback):
+    - Restricted the term dropdown to only the course's actual offered terms (dropped the recent-terms merge), and removed the now-unused getRecentTerms helper.
+    - Removed the blind getCurrentTerm() defaults from both the add-review and edit-review forms — term is optional and left unset unless the user explicitly picks one.
+    - Added a "Term" row next to Rating/Difficulty on the rendered review card, shown only when a review has a term set.
+    - Found and fixed a real backend bug while testing this manually: db.add_review's MongoDB $set document omitted the term field entirely, so term was silently dropped on every save
+    regardless of what the API received — added "term": &review.term to the $set doc in crates/db/src/db.rs.
+    - Confirmed the tsconfig.json duplicate ignoreDeprecations key the reviewer flagged was already fixed on the branch.
+
+  Status: Re-opened after rebasing onto upstream/master to resolve CI failures from PR #1170 (branch was 19 commits stale); reviewer feedback now addressed and manually verified
+    end-to-end against a locally run client + backend + MongoDB
+
 ---
 
 ## Learnings & Reflections
